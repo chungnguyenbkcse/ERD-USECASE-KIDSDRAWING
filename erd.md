@@ -95,7 +95,7 @@ entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
     * status: boolean
 }
 
-entity "ART_LEVEL" as art_level {
+entity "ART_AGE" as art_age {
     @ref art_service
 }
 
@@ -108,7 +108,7 @@ entity "ART_TYPE" as art_type {
 user ||..o{ teacher_register_qualification
 user ||..o{ teacher_register_qualification: review level
 qualification }o..|| art_type
-qualification }o..|| art_level
+qualification }o..|| art_age
 qualification }o..|| teacher_register_qualification
 
 @enduml
@@ -174,7 +174,7 @@ entity "USER" as user {
     @ref user_service
 }
 
-entity "ART_LEVEL" as art_level {
+entity "ART_AGE" as art_age {
     @ref art_service
 }
 
@@ -220,7 +220,7 @@ entity "USER_GRADE_CONTEST" as user_grade_contest {
 user ||..o{ contest: create contest
 user ||..o{ user_register_join_contest: join contest
 user_register_join_contest }o..|| contest
-contest }o..|| art_level
+contest }o..|| art_age
 contest }o..|| art_type
 user ||..o{ user_grade_contest: grade contest
 user_grade_contest }o..|| contest
