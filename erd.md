@@ -79,18 +79,13 @@ entity "USER" as user {
     @ref user_service
 }
 
-entity "QUALIFICATIONS" as qualification {
-    * id: uuid <<PK>>
-    --
-    * art_level_id: uuid <<FK>>
-    * art_type_id: uuid <<FK>>
-}
 
 entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
     * id: uuid <<PK>>
     --
     * teacher_id: uuid <<FK>>
-    * qualification_id: uuid <<FK>>
+    * art_level_id: uuid <<FK>>
+    * art_type_id: uuid <<FK>>
     * degree_photo_url: varchar(255)
     * status: boolean
 }
@@ -107,9 +102,9 @@ entity "ART_TYPE" as art_type {
 
 user ||..o{ teacher_register_qualification
 user ||..o{ teacher_register_qualification: review level
-qualification }o..|| art_type
-qualification }o..|| art_age
-qualification }o..|| teacher_register_qualification
+teacher_register_qualification }o..|| art_type
+teacher_register_qualification }o..|| art_age
+
 
 @enduml
 ```
