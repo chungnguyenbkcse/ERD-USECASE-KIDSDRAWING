@@ -181,7 +181,7 @@ entity "CONTEST" as contest {
     * id: uuid <<PK>>
     --
     * creator_id: uuid <<FK>>
-    * art_level_id: uuid <<FK>>
+    * art_age_id: uuid <<FK>>
     * art_type_id: uuid <<FK>>
     * name: varchar(255)
     * description: text
@@ -200,7 +200,6 @@ entity "USER_REGISTER_JOIN_CONTEST" as user_register_join_contest {
     --
     * student_id: uuid <<FK>>
     * contest_id: uuid <<FK>>
-    * status: boolean
 }
 
 entity "USER_GRADE_CONTEST" as user_grade_contest {
@@ -212,12 +211,12 @@ entity "USER_GRADE_CONTEST" as user_grade_contest {
 
 ' Contest Relationship
 
-user ||..o{ contest: create contest
-user ||..o{ user_register_join_contest: join contest
+user ||..o{ contest: create
+user ||..o{ user_register_join_contest: join
 user_register_join_contest }o..|| contest
 contest }o..|| art_age
 contest }o..|| art_type
-user ||..o{ user_grade_contest: grade contest
+user ||..o{ user_grade_contest: grade
 user_grade_contest }o..|| contest
 @enduml
 ```
@@ -740,49 +739,5 @@ notification ||--|| class_notification
 notification ||--o{ user_read_notification
 class_notification ||..|| class
 user_read_notification }o--|| user
-@enduml
-```
-
-## 14. Blog service
-
-```plantuml
-@startuml blog_service
-' hide the spot
-hide circle
-
-' avoid problems with angled crows feet
-skinparam linetype ortho
-
-entity "USER" as user {
-    @ref user_service
-}
-
-entity "BLOG" as blog {
-    * id: uuid <<PK>>
-    --
-    * creator_id: uuid <<FK>>
-    * name: varchar(255)
-    * description: text
-    image_url: varchar(255)
-    * create_time: timestamp
-    * update_time: timestamp
-}
-
-entity "TAG" as tag {
-    * id: uuid <<PK>>
-    --
-    * name: varchar(255)
-}
-
-entity "BLOG_HAS_TAG" as blog_has_tag {
-    * blog_id: uuid <<PK,FK>>
-    * tag_id: uuid <<PK,FK>>
-}
-
-' Notification Relationship
-
-user ||..o{ blog: create blog
-blog_has_tag }o--|| blog
-blog_has_tag }o--|| tag
 @enduml
 ```
