@@ -65,50 +65,6 @@ role_has_privilege }o--|| privilege
 @enduml
 ```
 
-## 2. Teacher level service
-
-```plantuml
-@startuml teacher_level_service
-' hide the spot
-hide circle
-
-' avoid problems with angled crows feet
-skinparam linetype ortho
-
-entity "USER" as user {
-    @ref user_service
-}
-
-
-entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
-    * id: uuid <<PK>>
-    --
-    * teacher_id: uuid <<FK>>
-    * art_level_id: uuid <<FK>>
-    * art_type_id: uuid <<FK>>
-    * degree_photo_url: varchar(255)
-    * status: boolean
-}
-
-entity "ART_AGE" as art_age {
-    @ref art_service
-}
-
-entity "ART_TYPE" as art_type {
-    @ref art_service
-}
-
-' Art Relationship
-
-user ||..o{ teacher_register_qualification
-user ||..o{ teacher_register_qualification: review level
-teacher_register_qualification }o..|| art_type
-teacher_register_qualification }o..|| art_age
-
-
-@enduml
-```
-
 ## 3. Art service
 
 ```plantuml
@@ -247,12 +203,23 @@ entity "ART_AGE" as art_age {
     @ref art_service
 }
 
+entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
+    * id: uuid <<PK>>
+    --
+    * teacher_id: uuid <<FK>>
+    * reviewer_id: uuid <<FK>>
+    * course_id: uuid <<FK>>
+    * degree_photo_url: varchar(255)
+    * status: boolean
+}
+
 entity "COURSE" as course {
     * id: uuid <<PK>>
     --
     * creator_id: uuid <<FK>>
     * art_level_id: uuid <<FK>>
     * art_type_id: uuid <<FK>>
+    * art_age_id: uuid <<FK>>
     * name: varchar(255)
     * description: text
     * max_participant: integer
@@ -268,6 +235,9 @@ entity "COURSE" as course {
 ' Course Relationship
 
 user ||..o{ course: create course
+user ||..o{ teacher_register_qualification: teach
+user ||..o{ teacher_register_qualification: review
+course ||..o{ teacher_register_qualification
 course }o..|| art_level
 course }o..|| art_type
 course }o..|| art_age
@@ -315,9 +285,10 @@ entity "LESSON_TIME" as lesson_time {
 
 user ||..o{ schedule: create schedule
 schedule ||..o{ schedule_item
-schedule_item ||..|| lesson_time
+schedule_item }o..|| lesson_time
 @enduml
 ```
+
 
 ## 7. Semester service
 
@@ -362,6 +333,7 @@ entity "SCHEDULE" as schedule {
     @ref schedule_service
 }
 
+
 entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_semester {
     * id: uuid <<PK>>
     --
@@ -372,12 +344,11 @@ entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_semester {
     * time: timestamp
 }
 
-entity "TEACHER_TEACH_SEMESTER" as user_register_teach_semester {
+entity "USER_REGISTER_TEACHER_TEACH_SEMESTER" as user_register_teach_semester {
     * id: uuid <<PK>>
     --
     * teacher_id: uuid <<FK>>
     * semester_course_id: uuid <<FK>>
-    * status: boolean
     * time: timestamp
 }
 
@@ -394,6 +365,7 @@ semester_course }o..|| semester_creation
 semester_course }o..|| schedule
 @enduml
 ```
+
 
 ## 8. Class service
 
@@ -414,8 +386,8 @@ entity "CLASS" as class {
     --
     * creator_id: uuid <<FK>>
     * registration_id: uuid <<FK>>
+    * security_code: varchar(255)
     * name: varchar(255)
-    * description: text
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -429,7 +401,7 @@ entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_semester {
     @ref semester_service
 }
 
-entity "USER_REGISTER_TEACH_SEMESTER" as user_register_teach_semester {
+entity "TEACHER_REGISTER_TEACH_SEMESTER" as user_register_teach_semester {
     @ref semester_service
 }
 
@@ -454,6 +426,68 @@ skinparam linetype ortho
 
 entity "USER" as user {
     @ref user_service
+}
+
+entity "COURSE" as course {
+    @ref course_service
+}
+
+entity "SECTION" as section {
+    * id: uuid <<PK>>
+    --
+    * class_id: uuid <<FK>>
+    * name: varchar(255)
+    * description: text
+    * number: integer
+    * teaching_form: boolean
+    * recording: text
+    * message: text
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
+entity "SECTION_TEMPLATE" as section_template {
+    * id: uuid <<PK>>
+    --
+    * creator_id: uuid <<FK>>
+    * course_id: uuid <<FK>>
+    * name: varchar(255)
+    * desription: text
+    * number: integer
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
+
+entity "CLASS" as class {
+    @ref class_service
+}
+
+' Section Relationship
+class ||..o{ section
+section_template }o..|| user
+section_template }o..|| course
+@enduml
+```
+
+## 10. User Leave Section
+```plantuml
+@startuml user_leave_section_service
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+entity "SECTION" as section {
+    @ref section_service
+}
+
+entity "USER" as user {
+    @ref user_service
+}
+
+entity "CLASS" as class {
+    @ref class_service
 }
 
 entity "TEACHER_LEAVE" as teacher_leave {
@@ -483,29 +517,6 @@ entity "STUDENT_LEAVE" as student_leave {
     * update_time: timestamp
 }
 
-
-
-entity "SECTION" as section {
-    * id: uuid <<PK>>
-    --
-    make_up_for_section_id: uuid <<FK>>
-    * class_id: uuid <<FK>>
-    * name: varchar(255)
-    * description: text
-    * number: integer
-    * recording: text
-    * message: text
-    * create_time: timestamp
-    * update_time: timestamp
-}
-
-
-entity "CLASS" as class {
-    @ref class_service
-}
-
-' Section Relationship
-class ||..o{ section
 user ||..o{ teacher_leave : review
 user ||..o{ teacher_leave : substitute_teacher
 user ||..o{ student_leave : review
@@ -514,9 +525,10 @@ teacher_leave }o..|| user : teacher registration
 teacher_leave }o..|| class 
 student_leave }o..|| section
 student_leave }o..|| user : teacher registration
-student_leave }o..|| class 
+student_leave }o..|| class
 @enduml
 ```
+
 
 ## 10. Exercise service
 
@@ -551,9 +563,26 @@ entity "EXERCISE" as exercise {
     * update_time: timestamp
 }
 
+entity "EXERCISE_TEMPLATE" as exercise_template {
+    * id: uuid <<PK>>
+    --
+    * section_template_id: uuid <<FK>>
+    * level_id: uuid <<FK>>
+    * name: varchar(255)
+    * description: text
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
+entity "SECTION_TEMPLATE" as section_template {
+    @ref section_service
+}
+
 ' Exercise Relationship
 exercise }o..|| exercise_level
 exercise }o..|| section
+exercise_template }o..|| exercise_level
+exercise_template }o..|| section_template
 @enduml
 ```
 
@@ -575,11 +604,25 @@ entity "SECTION" as section {
     @ref section_service
 }
 
+entity "SECTION_TEMPLATE" as section_template {
+    @ref section_template_service
+}
+
 entity "TUTORIAL" as tutorial {
     * id: uuid <<PK>>
     --
     * section_id: uuid <<FK>>
     * creator_id: uuid <<FK>>
+    * name: varchar(255)
+    * description: text
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
+entity "TUTORIAL_TEMPLATE" as tutorial_template {
+     * id: uuid <<PK>>
+    --
+    * section_template_id: uuid <<FK>>
     * name: varchar(255)
     * description: text
     * create_time: timestamp
@@ -596,19 +639,37 @@ entity "TUTORIAL_PAGE" as tutorial_page {
     * number: integer
 }
 
-entity "USER_REVIEW_CREATE_TUTORIAL" as user_review_create_tutorial {
-    * reviewer_id: uuid <<PK,FK>>
-    * tutorial_id: uuid <<PK,FK>>
+entity "TUTORIAL_TEMPLATE_PAGE" as tutorial_template_page {
+    * id: uuid <<PK>>
     --
+    * tutorial_template_id: uuid <<FK>>
+    * name: varchar(255)
+    * description: text
+    * number: integer
+}
+
+
+entity "TEACHER_REGISTER_TUTORIAL" as user_register_tutorial {
+    * id: uuid <<PK>>
+    --
+    * teacher_id: uuid <<FK>>
+    * reviewer_id: uuid <<FK>>
+    * tutorial_id: uuid <<FK>>
+    * tutorial_template_id: uuid <<FK>>
     * time: timestamp
 }
 
 ' Tutorial Relationship
-user_review_create_tutorial }o--|| user
-user_review_create_tutorial ||--|| tutorial
-user ||..o{ tutorial: create
+user_register_tutorial }o..|| user 
+user_register_tutorial }o..|| user 
+user_register_tutorial }o..|| tutorial
+user_register_tutorial }o..|| tutorial_template
+user ||..o{ tutorial
+user ||..o{ tutorial
 tutorial ||..o{ tutorial_page
 tutorial }o..|| section
+tutorial_template }o..|| section_template
+tutorial_template }o..|| tutorial_template_page
 @enduml
 ```
 
