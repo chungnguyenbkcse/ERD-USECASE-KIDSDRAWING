@@ -669,7 +669,7 @@ user ||..o{ tutorial
 tutorial ||..o{ tutorial_page
 tutorial }o..|| section
 tutorial_template }o..|| section_template
-tutorial_template }o..|| tutorial_template_page
+tutorial_template ||..o{ tutorial_template_page
 @enduml
 ```
 
