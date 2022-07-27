@@ -210,7 +210,7 @@ entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
     * reviewer_id: uuid <<FK>>
     * course_id: uuid <<FK>>
     * degree_photo_url: varchar(255)
-    * status: boolean
+    * status: char(4)
 }
 
 entity "COURSE" as course {
@@ -656,6 +656,7 @@ entity "TEACHER_REGISTER_TUTORIAL" as user_register_tutorial {
     * reviewer_id: uuid <<FK>>
     * tutorial_id: uuid <<FK>>
     * tutorial_template_id: uuid <<FK>>
+    * status: char(4)
     * time: timestamp
 }
 
