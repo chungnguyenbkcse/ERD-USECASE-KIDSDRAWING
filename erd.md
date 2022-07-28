@@ -454,6 +454,7 @@ entity "SECTION_TEMPLATE" as section_template {
     * name: varchar(255)
     * desription: text
     * number: integer
+    * teaching_form: boolean
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -465,8 +466,8 @@ entity "CLASS" as class {
 
 ' Section Relationship
 class ||..o{ section
-section_template }o..|| user
-section_template }o..|| course
+section_template ||..|| user
+section_template ||..|| course
 @enduml
 ```
 
@@ -563,26 +564,10 @@ entity "EXERCISE" as exercise {
     * update_time: timestamp
 }
 
-entity "EXERCISE_TEMPLATE" as exercise_template {
-    * id: uuid <<PK>>
-    --
-    * section_template_id: uuid <<FK>>
-    * level_id: uuid <<FK>>
-    * name: varchar(255)
-    * description: text
-    * create_time: timestamp
-    * update_time: timestamp
-}
-
-entity "SECTION_TEMPLATE" as section_template {
-    @ref section_service
-}
 
 ' Exercise Relationship
 exercise }o..|| exercise_level
 exercise }o..|| section
-exercise_template }o..|| exercise_level
-exercise_template }o..|| section_template
 @enduml
 ```
 
@@ -669,7 +654,7 @@ user ||..o{ tutorial
 user ||..o{ tutorial
 tutorial ||..o{ tutorial_page
 tutorial }o..|| section
-tutorial_template }o..|| section_template
+tutorial_template ||..|| section_template
 tutorial_template ||..o{ tutorial_template_page
 @enduml
 ```
