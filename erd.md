@@ -442,6 +442,7 @@ entity "SECTION" as section {
     * teaching_form: boolean
     * recording: text
     * message: text
+    * time: timestamp
     * create_time: timestamp
     * update_time: timestamp
 }
