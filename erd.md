@@ -321,6 +321,13 @@ entity "SEMESTER" as semester_creation {
     * update_time: timestamp
 }
 
+entity "HOLIDAY" as holiday {
+    * id: uuid <<PK>>
+    --
+    * semester_id: uuid <<FK>>
+    * day: datetime
+}
+
 entity "SEMESTER_COURSE" as semester_course {
     * id: uuid <<PK>>
     --
@@ -362,6 +369,7 @@ user_register_join_semester }o..|| user
 user_register_join_semester }o..|| semester_course
 semester_course }o..|| course
 semester_course }o..|| semester_creation
+holiday }o..|| semester_creation
 semester_course }o..|| schedule
 @enduml
 ```
@@ -442,7 +450,6 @@ entity "SECTION" as section {
     * teaching_form: boolean
     * recording: text
     * message: text
-    * time: timestamp
     * create_time: timestamp
     * update_time: timestamp
 }
