@@ -288,7 +288,6 @@ entity "SEMESTER_CLASS" as semester_class {
     --
     * creation_id: uuid <<FK>>
     * course_id: uuid <<FK>>
-    * schedule_id: uuid <<FK>>
     * max_participant: integer
 }
 
@@ -296,6 +295,7 @@ entity "SCHEDULE" as schedule {
     * id: uuid <<PK>>
     --
     * lesson_time: uuid <<FK>>
+    * semester_class_id: uuid <<FK>>
     * date_of_week: integer
 }
 
