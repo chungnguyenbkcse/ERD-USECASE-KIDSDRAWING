@@ -222,7 +222,6 @@ entity "COURSE" as course {
     * art_age_id: uuid <<FK>>
     * name: varchar(255)
     * description: text
-    * max_participant: integer
     * num_of_section: integer
     * price: float8
     image_url: varchar(255)
@@ -241,51 +240,6 @@ course ||..o{ teacher_register_qualification
 course }o..|| art_level
 course }o..|| art_type
 course }o..|| art_age
-@enduml
-```
-
-## 6. Schedule service
-
-```plantuml
-@startuml schedule_service
-' hide the spot
-hide circle
-
-' avoid problems with angled crows feet
-skinparam linetype ortho
-
-entity "USER" as user {
-    @ref user_service
-}
-
-entity "SCHEDULE" as schedule {
-    * id: uuid <<PK>>
-    --
-    * creator_id: uuid <<FK>>
-    * name: varchar(255)
-    * create_time: timestamp
-    * update_time: timestamp
-}
-
-entity "SCHEDULE_ITEM" as schedule_item {
-    * id: uuid <<PK>>
-    --
-    * schedule_id: uuid <<FK>>
-    * lesson_time: uuid <<FK>>
-    * date_of_week: integer
-}
-
-entity "LESSON_TIME" as lesson_time {
-    * id: uuid <<PK>>
-    --
-    * start_time: time
-    * end_time: time
-}
-' Semester Relationship
-
-user ||..o{ schedule: create schedule
-schedule ||..o{ schedule_item
-schedule_item }o..|| lesson_time
 @enduml
 ```
 
@@ -317,6 +271,7 @@ entity "SEMESTER" as semester_creation {
     * name: varchar(255)
     * description: text
     * start_time: timestamp
+    * end_time: timestamp
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -328,49 +283,61 @@ entity "HOLIDAY" as holiday {
     * day: datetime
 }
 
-entity "SEMESTER_COURSE" as semester_course {
+entity "SEMESTER_CLASS" as semester_class {
     * id: uuid <<PK>>
     --
     * creation_id: uuid <<FK>>
     * course_id: uuid <<FK>>
     * schedule_id: uuid <<FK>>
+    * max_participant: integer
 }
 
 entity "SCHEDULE" as schedule {
-    @ref schedule_service
+    * id: uuid <<PK>>
+    --
+    * lesson_time: uuid <<FK>>
+    * date_of_week: integer
+}
+
+entity "LESSON_TIME" as lesson_time {
+    * id: uuid <<PK>>
+    --
+    * start_time: time
+    * end_time: time
 }
 
 
-entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_semester {
+entity "USER_REGISTER_JOIN_CLASS" as user_register_join_class {
     * id: uuid <<PK>>
     --
     * student_id: uuid <<FK>>
-    * semester_course_id: uuid <<FK>>
+    * semester_class_id: uuid <<FK>>
     * payer_id: uuid <<FK>>
     * price: float8
     * time: timestamp
 }
 
-entity "USER_REGISTER_TEACHER_TEACH_SEMESTER" as user_register_teach_semester {
+entity "USER_REGISTER_TEACHER_TEACH_CLASS" as user_register_teach_class {
     * id: uuid <<PK>>
     --
     * teacher_id: uuid <<FK>>
-    * semester_course_id: uuid <<FK>>
+    * semester_class_id: uuid <<FK>>
     * time: timestamp
 }
 
 ' Semester Relationship
 
-user ||..o{ user_register_join_semester: pay for\n joining
+user ||..o{ user_register_join_class: pay for\n joining
 user ||..o{ semester_creation: create semester
-user_register_teach_semester }o..|| user
-user_register_teach_semester }o..|| semester_course
-user_register_join_semester }o..|| user
-user_register_join_semester }o..|| semester_course
-semester_course }o..|| course
-semester_course }o..|| semester_creation
+user_register_teach_class }o..|| user
+user_register_teach_class }o..|| semester_class
+user_register_join_class }o..|| user
+user_register_join_class }o..|| semester_class
+semester_class }o..|| course
+semester_class }o..|| semester_creation
 holiday }o..|| semester_creation
-semester_course }o..|| schedule
+semester_class ||..o{ schedule
+schedule ||..|| lesson_time
 @enduml
 ```
 
@@ -400,16 +367,16 @@ entity "CLASS" as class {
     * update_time: timestamp
 }
 
-entity "CLASS_HAS_REGISTER_JOIN_SEMESTER" as user_join_class {
+entity "CLASS_HAS_REGISTER_JOIN_SEMESTER_CLASS" as user_join_class {
     * class_id: uuid <<PK,FK>>
     * join_registration_id: uuid <<PK,FK>>
 }
 
-entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_semester {
+entity "USER_REGISTER_JOIN_CLASS" as user_register_join_class {
     @ref semester_service
 }
 
-entity "TEACHER_REGISTER_TEACH_SEMESTER" as user_register_teach_semester {
+entity "TEACHER_REGISTER_TEACH_CLASS" as user_register_teach_class {
     @ref semester_service
 }
 
@@ -417,8 +384,8 @@ entity "TEACHER_REGISTER_TEACH_SEMESTER" as user_register_teach_semester {
 
 user ||..o{ class: create class
 user_join_class }o--|| class
-user_join_class ||--|| user_register_join_semester
-class ||..|| user_register_teach_semester: register in
+user_join_class ||--|| user_register_join_class
+class ||..|| user_register_teach_class: register in
 @enduml
 ```
 
