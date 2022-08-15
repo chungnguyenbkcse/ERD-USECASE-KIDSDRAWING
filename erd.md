@@ -288,6 +288,7 @@ entity "SEMESTER_CLASS" as semester_class {
     --
     * creation_id: uuid <<FK>>
     * course_id: uuid <<FK>>
+    * name: varchar(255)
     * max_participant: integer
 }
 
