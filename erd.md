@@ -290,6 +290,7 @@ entity "SEMESTER_CLASS" as semester_class {
     * course_id: uuid <<FK>>
     * name: varchar(255)
     * max_participant: integer
+    * registration_time: timestamp
 }
 
 entity "SCHEDULE" as schedule {
