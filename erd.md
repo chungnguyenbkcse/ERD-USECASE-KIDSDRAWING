@@ -436,16 +436,6 @@ entity "SECTION_TEMPLATE" as section_template {
     * update_time: timestamp
 }
 
-entity "TEACHER_ASKED_ADJUST_SECTION" as teacher_asked_adjust_section {
-    * id: uuid <<PK>>
-    --
-    * section_id: uuid <<FK>>
-    * teacher_id: uuid <<FK>>
-    * reviewer_id: uuid <<FK>>
-    * status: string
-    * time: timestamp
-}
-
 
 entity "CLASS" as class {
     @ref class_service
@@ -454,8 +444,6 @@ entity "CLASS" as class {
 ' Section Relationship
 class ||..o{ section
 section_template ||..|| user
-user ||..o{ teacher_asked_adjust_section
-section ||..o{ teacher_asked_adjust_section
 section_template ||..|| course
 @enduml
 ```
@@ -589,6 +577,7 @@ entity "TUTORIAL" as tutorial {
     * creator_id: uuid <<FK>>
     * name: varchar(255)
     * description: text
+    * status: string
     * create_time: timestamp
     * update_time: timestamp
 }
