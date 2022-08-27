@@ -210,7 +210,7 @@ entity "TEACHER_REGISTER_QUALIFICATIONS" as teacher_register_qualification {
     * reviewer_id: uuid <<FK>>
     * course_id: uuid <<FK>>
     * degree_photo_url: varchar(255)
-    * status: char(4)
+    * status: string
 }
 
 entity "COURSE" as course {
@@ -436,6 +436,16 @@ entity "SECTION_TEMPLATE" as section_template {
     * update_time: timestamp
 }
 
+entity "TEACHER_ASKED_ADJUST_SECTION" as teacher_asked_adjust_section {
+    * id: uuid <<PK>>
+    --
+    * section_id: uuid <<FK>>
+    * teacher_id: uuid <<FK>>
+    * reviewer_id: uuid <<FK>>
+    * status: string
+    * time: timestamp
+}
+
 
 entity "CLASS" as class {
     @ref class_service
@@ -444,6 +454,8 @@ entity "CLASS" as class {
 ' Section Relationship
 class ||..o{ section
 section_template ||..|| user
+user ||..o{ teacher_asked_adjust_section
+section ||..o{ teacher_asked_adjust_section
 section_template ||..|| course
 @enduml
 ```
@@ -477,7 +489,7 @@ entity "TEACHER_LEAVE" as teacher_leave {
     * reviewer_id: uuid <<FK>>
     * substitute_teacher_id: uuid <<FK>>
     * description: text
-    * status: boolean
+    * status: string
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -490,7 +502,7 @@ entity "STUDENT_LEAVE" as student_leave {
     * student_id: uuid <<FK>>
     * reviewer_id: uuid <<FK>>
     * description: text
-    * status: boolean
+    * status: string
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -611,22 +623,7 @@ entity "TUTORIAL_TEMPLATE_PAGE" as tutorial_template_page {
 }
 
 
-entity "TEACHER_REGISTER_TUTORIAL" as user_register_tutorial {
-    * id: uuid <<PK>>
-    --
-    * teacher_id: uuid <<FK>>
-    * reviewer_id: uuid <<FK>>
-    * tutorial_id: uuid <<FK>>
-    * tutorial_template_id: uuid <<FK>>
-    * status: char(4)
-    * time: timestamp
-}
-
 ' Tutorial Relationship
-user_register_tutorial }o..|| user 
-user_register_tutorial }o..|| user 
-user_register_tutorial }o..|| tutorial
-user_register_tutorial }o..|| tutorial_template
 user ||..o{ tutorial
 user ||..o{ tutorial
 tutorial ||..o{ tutorial_page
