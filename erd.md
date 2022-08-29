@@ -286,7 +286,7 @@ entity "HOLIDAY" as holiday {
 entity "SEMESTER_CLASS" as semester_class {
     * id: uuid <<PK>>
     --
-    * creation_id: uuid <<FK>>
+    * semester_id: uuid <<FK>>
     * course_id: uuid <<FK>>
     * name: varchar(255)
     * max_participant: integer
@@ -362,7 +362,7 @@ entity "CLASS" as class {
     * id: uuid <<PK>>
     --
     * creator_id: uuid <<FK>>
-    * registration_id: uuid <<FK>>
+    * user_register_teach_semester: uuid <<FK>>
     * security_code: varchar(255)
     * name: varchar(255)
     * create_time: timestamp
