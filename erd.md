@@ -25,6 +25,7 @@ entity "USER" as user {
     address: varchar(255)
     date_of_birth: date
     profile_image_url: varchar(255)
+    * deleted: boolean
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -582,6 +583,29 @@ entity "TUTORIAL" as tutorial {
     * update_time: timestamp
 }
 
+entity "USER_REGISTER_TUTORIAL" as user_register_tutorial {
+    * id: uuid <<PK>>
+    --
+    * creator_id: uuid <<FK>>
+    * section_id: uuid <<FK>>
+    * name: varchar(255)
+    * status: string
+    * deleted: boolean
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
+
+entity "USER_REGISTER_TUTORIAL_PAGE" as user_register_tutorial_page {
+    * id: uuid <<PK>>
+    --
+    * user_register_tutorial_id: uuid <<FK>>
+    * name: varchar(255)
+    * description: text
+    * number: integer
+    * deleted: boolean
+}
+
 entity "TUTORIAL_TEMPLATE" as tutorial_template {
      * id: uuid <<PK>>
     --
@@ -619,6 +643,8 @@ tutorial ||..o{ tutorial_page
 tutorial }o..|| section
 tutorial_template ||..|| section_template
 tutorial_template ||..o{ tutorial_template_page
+user_register_tutorial }o..|| section
+user_register_tutorial ||..o{ user_register_tutorial_page
 @enduml
 ```
 
