@@ -415,7 +415,6 @@ entity "SECTION" as section {
     --
     * class_id: uuid <<FK>>
     * name: varchar(255)
-    * description: text
     * number: integer
     * teaching_form: boolean
     * recording: text
@@ -430,7 +429,6 @@ entity "SECTION_TEMPLATE" as section_template {
     * creator_id: uuid <<FK>>
     * course_id: uuid <<FK>>
     * name: varchar(255)
-    * desription: text
     * number: integer
     * teaching_form: boolean
     * create_time: timestamp
@@ -577,8 +575,6 @@ entity "TUTORIAL" as tutorial {
     * section_id: uuid <<FK>>
     * creator_id: uuid <<FK>>
     * name: varchar(255)
-    * description: text
-    * status: string
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -590,7 +586,6 @@ entity "USER_REGISTER_TUTORIAL" as user_register_tutorial {
     * section_id: uuid <<FK>>
     * name: varchar(255)
     * status: string
-    * deleted: boolean
     * create_time: timestamp
     * update_time: timestamp
 }
@@ -603,7 +598,6 @@ entity "USER_REGISTER_TUTORIAL_PAGE" as user_register_tutorial_page {
     * name: varchar(255)
     * description: text
     * number: integer
-    * deleted: boolean
 }
 
 entity "TUTORIAL_TEMPLATE" as tutorial_template {
@@ -611,7 +605,6 @@ entity "TUTORIAL_TEMPLATE" as tutorial_template {
     --
     * section_template_id: uuid <<FK>>
     * name: varchar(255)
-    * description: text
     * create_time: timestamp
     * update_time: timestamp
 }
