@@ -728,9 +728,6 @@ entity "USER" as user {
     @ref user_service
 }
 
-entity "CLASS" as class {
-    @ref class_service
-}
 
 entity "NOTIFICATION" as notification {
     * id: uuid <<PK>>
@@ -738,20 +735,6 @@ entity "NOTIFICATION" as notification {
     * name: varchar(255)
     * description: text
     * time: timestamp
-}
-
-entity "ANONYMOUS_NOTIFICATION" as anonymous_notification {
-    * notification_id: uuid <<PK>>
-    --
-    * email: varchar(255)
-    * user_full_name: varchar(255)
-    * phone: varchar(15)
-}
-
-entity "CLASS_NOTIFICATION" as class_notification {
-    * notification_id: uuid <<PK>>
-    --
-    * class_id: uuid <<FK>>
 }
 
 entity "USER_READ_NOTIFICATION" as user_read_notification {
@@ -763,10 +746,7 @@ entity "USER_READ_NOTIFICATION" as user_read_notification {
 
 ' Notification Relationship
 
-notification ||--|| anonymous_notification
-notification ||--|| class_notification
 notification ||--o{ user_read_notification
-class_notification ||..|| class
 user_read_notification }o--|| user
 @enduml
 ```
