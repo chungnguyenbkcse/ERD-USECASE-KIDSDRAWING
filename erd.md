@@ -366,6 +366,7 @@ entity "CLASS" as class {
     * user_register_teach_semester: uuid <<FK>>
     * security_code: varchar(255)
     * name: varchar(255)
+    * review_star: integer
     * create_time: timestamp
     * update_time: timestamp
 }
