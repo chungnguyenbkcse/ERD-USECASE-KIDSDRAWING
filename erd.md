@@ -33,6 +33,7 @@ entity "USER" as user {
 entity "PASSWORD_RESET_TOKEN" as password_reset_token {
     * id: uuid <<PK>>
     --
+    * user_id: uuid <<FK>>
     * token: varchar(255)
     * expiryDate: timestamp
 }
