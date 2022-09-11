@@ -30,6 +30,13 @@ entity "USER" as user {
     * update_time: timestamp
 }
 
+entity "PASSWORD_RESET_TOKEN" as password_reset_token {
+    * id: uuid <<PK>>
+    --
+    * token: varchar(255)
+    * expiryDate: timestamp
+}
+
 entity "ROLE" as role {
     * id: uuid <<PK>>
     --
@@ -60,6 +67,7 @@ entity "ROLE_HAS_PRIVILEGE" as role_has_privilege {
 
 user ||..o{ user: is\n parent\n of
 user_has_role }o--|| user
+password_reset_token ||..|| user
 user_has_role }o--|| role
 role_has_privilege }o--|| role
 role_has_privilege }o--|| privilege
@@ -310,7 +318,7 @@ entity "LESSON_TIME" as lesson_time {
 }
 
 
-entity "USER_REGISTER_JOIN_CLASS" as user_register_join_class {
+entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_class {
     * id: uuid <<PK>>
     --
     * student_id: uuid <<FK>>
@@ -366,17 +374,18 @@ entity "CLASS" as class {
     * user_register_teach_semester: uuid <<FK>>
     * security_code: varchar(255)
     * name: varchar(255)
-    * review_star: integer
     * create_time: timestamp
     * update_time: timestamp
 }
 
 entity "CLASS_HAS_REGISTER_JOIN_SEMESTER_CLASS" as user_join_class {
     * class_id: uuid <<PK,FK>>
-    * join_registration_id: uuid <<PK,FK>>
+    * user_register_join_semester_id: uuid <<PK,FK>>
+    --
+    * review_star: integer
 }
 
-entity "USER_REGISTER_JOIN_CLASS" as user_register_join_class {
+entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_class {
     @ref semester_service
 }
 
