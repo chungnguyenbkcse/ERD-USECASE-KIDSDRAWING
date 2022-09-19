@@ -434,6 +434,16 @@ entity "SECTION" as section {
     * update_time: timestamp
 }
 
+entity "USER_ATTENDANCE" as user_attendance {
+    * id: uuid <<PK>>
+    --
+    * section_id: uuid <<FK>>
+    * student_id: uuid <<FK>>
+    * status: varchar(255)
+    * create_time: timestamp
+    * update_time: timestamp
+}
+
 entity "SECTION_TEMPLATE" as section_template {
     * id: uuid <<PK>>
     --
@@ -453,6 +463,8 @@ entity "CLASS" as class {
 
 ' Section Relationship
 class ||..o{ section
+section ||..o{ user_attendance
+user_attendance ||..|| user
 section_template ||..|| user
 section_template ||..|| course
 @enduml
