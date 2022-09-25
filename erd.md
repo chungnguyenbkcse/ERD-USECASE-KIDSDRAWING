@@ -324,10 +324,12 @@ entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_class {
     --
     * student_id: uuid <<FK>>
     * semester_class_id: uuid <<FK>>
-    * payer_id: uuid <<FK>>
+    * payer: uuid <<FK>>
+    *status: string
     * price: float8
     * time: timestamp
 }
+
 
 entity "USER_REGISTER_TEACHER_TEACH_CLASS" as user_register_teach_class {
     * id: uuid <<PK>>
@@ -339,11 +341,10 @@ entity "USER_REGISTER_TEACHER_TEACH_CLASS" as user_register_teach_class {
 
 ' Semester Relationship
 
-user ||..o{ user_register_join_class: pay for\n joining
+user ||..o{ user_register_join_class
 user ||..o{ semester_creation: create semester
 user_register_teach_class }o..|| user
 user_register_teach_class }o..|| semester_class
-user_register_join_class }o..|| user
 user_register_join_class }o..|| semester_class
 semester_class }o..|| course
 semester_class }o..|| semester_creation
