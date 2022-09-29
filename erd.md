@@ -385,6 +385,9 @@ entity "CLASS_HAS_REGISTER_JOIN_SEMESTER_CLASS" as user_join_class {
     * user_register_join_semester_id: uuid <<PK,FK>>
     --
     * review_star: integer
+    * student_feedback: varchar(255)
+    * teacher_feedback: varchar(255)
+    * final_grade: float
 }
 
 entity "USER_REGISTER_JOIN_SEMESTER" as user_register_join_class {
