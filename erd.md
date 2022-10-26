@@ -301,6 +301,7 @@ entity "SEMESTER_CLASS" as semester_class {
     * name: varchar(255)
     * max_participant: integer
     * registration_time: timestamp
+    * registration_expiration_time: timestamp
 }
 
 entity "SCHEDULE" as schedule {
